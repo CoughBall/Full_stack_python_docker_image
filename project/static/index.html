@@ -1,0 +1,98 @@
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+        crossorigin="anonymous">
+    <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+        crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnComments").click(function () {
+                var postId = $("#postId").val();
+                clearFormData();
+                $.get("/api/posts/" + postId,
+                    function getPosterPostAndComments(data) {
+                        if ($.isEmptyObject(data)) {
+                            alert("No such post for this user");
+                            return;
+                        }
+                        FillFormWithData(data)
+                    });
+
+            });
+        });
+
+        function clearFormData() {
+            $("#commentsTableBody").empty();
+            $('.form-group input:not([id="postId"])').val('');
+        }
+
+        function FillFormWithData(data) {
+            fillFieldsWithData(data);
+            fillTableWithData(data);
+        }
+
+        function fillFieldsWithData(data) {
+            $("#userId").val(data.post.userId);
+            $("#postId").val(data.post.id);
+            $("#title").val(data.post.title);
+            $("#body").val(data.post.body);
+        }
+
+        function fillTableWithData(data) {
+            var comments = data.comments;
+            for (i = 0; i < comments.length; i++) {
+                var row = document.createElement('tr');
+                $("#commentsTableBody").append('<tr>' +
+                    '<td>' + comments[i].id + '</td>' +
+                    '<td>' + comments[i].name + '</td>' +
+                    '<td>' + comments[i].email + '</td>' +
+                    '<td>' + comments[i].body + '</td>' +
+                    '</tr>');
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container" style="margin-top:20px">
+        <form id="forms">
+            <div class="form-group">
+                <label for="postId">Post id</label>
+                <input required class="form-control" id="postId">
+            </div>
+            <button id="btnComments" type="button" class="btn btn-primary">Get Comments</button>
+            <div class="form-group">
+                <label for="userId">User id</label>
+                <input disabled class="form-control" id="userId">
+            </div>
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input disabled class="form-control" id="title">
+            </div>
+            <div class="form-group">
+                <label for="body">Body</label>
+                <input disabled class="form-control" id="body">
+            </div>
+        </form>
+        <h3>Comments</h3>
+        <table id="commentsTable" class="table">
+            <thead align="left" class="text-left">
+                <tr>
+                    <th class="text-left" scope="col">id</th>
+                    <th class="text-left" scope="col">name</th>
+                    <th class="text-left" scope="col">email</th>
+                    <th class="text-left" scope="col">body</th>
+                </tr>
+            </thead>
+            <tbody id="commentsTableBody"></tbody>
+        </table>
+    </div>
+</body>
+
+</html>
