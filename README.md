@@ -17,6 +17,8 @@ The Dockerfile installs the necessary programs and listens on port 80 for the we
 
 Exposing an API that consumes 2 other API's and consolidates their output from https://jsonplaceholder.typicode.com, the website is just used to test the API, it exposes posts for users and comments for those posts. This new API is consumed via /api/posts/<post_number> and returns a post for a user only if it exists for this specific user (the user id is always 1) and the comments for that specific post by consuming [posts](https://jsonplaceholder.typicode.com/posts) and [comments](https://jsonplaceholder.typicode.com/posts/1/comments) with the given post id
 
+![](https://i.imgur.com/KLCFy0L.gif)
+
 2. Web application: - project/static/index.html
 
 Web application that calls the previously mentioned API with an input of the post Id
